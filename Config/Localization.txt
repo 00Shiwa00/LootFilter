@@ -1,0 +1,2 @@
+Key,File,Type,UsedInMainMenu,NoTranslate,english,Context 
+lblLootFilter,UI,Tooltip,,,LootFilter

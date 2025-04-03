@@ -1,0 +1,20 @@
+<configs>
+	<append xpath="/perks">
+		<perk name="perkLootFilter" parent="skillPerceptionScavenging" name_key="perkLootFilterName" desc_key="lootFilterDesc" icon="ui_game_symbol_assemble">
+			<level_requirements level="1"><requirement name="ProgressionLevel" progression_name="attPerception" operation="GTE" value="1" desc_key="reqPerceptionLevel01"/></level_requirements>
+			<level_requirements level="2"><requirement name="ProgressionLevel" progression_name="attPerception" operation="GTE" value="2" desc_key="reqPerceptionLevel02"/></level_requirements>
+			<level_requirements level="3"><requirement name="ProgressionLevel" progression_name="attPerception" operation="GTE" value="3" desc_key="reqPerceptionLevel03"/></level_requirements>
+			<level_requirements level="4"><requirement name="ProgressionLevel" progression_name="attPerception" operation="GTE" value="5" desc_key="reqPerceptionLevel05"/></level_requirements>
+			<level_requirements level="5"><requirement name="ProgressionLevel" progression_name="attPerception" operation="GTE" value="7" desc_key="reqPerceptionLevel07"/></level_requirements>
+			<effect_group>
+				<passive_effect name="LootFilter" operation="set" level="1,2,3,4,5" value="1,3,5,10,-1"/>
+
+				<effect_description level="1" desc_key="perkLootFilterRank1Desc" long_desc_key="perkLootFilterRank1LongDesc"/>
+				<effect_description level="2" desc_key="perkLootFilterRank2Desc" long_desc_key="perkLootFilterRank2LongDesc"/>
+				<effect_description level="3" desc_key="perkLootFilterRank3Desc" long_desc_key="perkLootFilterRank3LongDesc"/>
+				<effect_description level="4" desc_key="perkLootFilterRank3Desc" long_desc_key="perkLootFilterRank4LongDesc"/>
+				<effect_description level="5" desc_key="perkLootFilterRank3Desc" long_desc_key="perkLootFilterRank5LongDesc"/>
+			</effect_group>
+		</perk>
+	</append>
+</configs>

@@ -1,0 +1,46 @@
+<configs>
+	<append xpath="/controls">
+		<lootFilterList_entry>
+			<rect height="43" style="press, hover, scroll" controller="LootFilter.LootFilterEntry, LootFilter" disabled_font_color="[disabledLabelColor]" enabled_font_color="[labelColor]" sound="[recipe_click]" sound_play_on_hover="[default_hover]" >
+				<sprite depth="2" name="backgroundMain" sprite="menu_empty3px" pos="-3,3" width="396" height="49" color="[black]" type="sliced" fillcenter="false" />
+				<sprite depth="3" name="background" width="100%" height="45" pos="0,1" color="[darkGrey]" type="sliced" />
+				<sprite depth="4" name="Icon" sprite="server_favorite" size="40,40" pos="34,-22" visible="{isfavorite}" pivot="center" foregroundlayer="true"/>
+				<label depth="4" name="Name" pos="200,-19" width="270" height="30" text="{lootFilterName}" font_size="28" color="[lightGrey]" justify="center" pivot="center"/>
+			</rect>
+		</lootFilterList_entry>
+
+		<lootFilter_item_stack controller="LootFilter.LootFilterContentItemStack, LootFilter" on_scroll="true" allow_dropping="false" prefix_id="false">
+			<rect controller="${controller}" style="itemStack, hover" collider_scale="1.0" on_scroll="${on_scroll}" allow_dropping="${allow_dropping}" prefix_id="${prefix_id}" tooltip="{tooltip}"  >
+				<sprite depth="2" name="backgroundMain" sprite="menu_empty3px" pos="-3,3" width="70" height="70" color="[black]" type="sliced" fillcenter="false" />
+				<sprite depth="3" name="background" sprite="menu_empty3px" width="65" height="65" color="{selectionbordercolor}" type="sliced" globalopacity="true" fillcenter="false"/>
+				<sprite depth="2" name="highlightOverlay" width="64" height="64" color="{backgroundcolor}" pos="0,0" type="sliced" globalopacity="true"/>
+
+				<texture depth="3" name="backgroundTexture" material="Materials/Transparent Colored" size="65,65" globalopacity="true"/>
+
+				<sprite depth="6" name="itemIcon" width="64" height="64" atlas="ItemIconAtlas" sprite="{itemicon}" pos="35,-30" pivot="center" foregroundlayer="true" color="{iconcolor}" />
+
+				<sprite depth="8" name="itemtypeicon" width="24" height="24" sprite="ui_game_symbol_{itemtypeicon}" pos="2,-2" foregroundlayer="true" visible="{hasitemtypeicon}" color="{itemtypeicontint}" />
+
+				<sprite depth="3" name="durabilityBackground" width="63" height="10" sprite="menu_empty3px" color="[darkGrey]" type="sliced" pos="1, -55" foregroundlayer="true" visible="{hasdurability}" />
+				<filledsprite depth="4" name="durability" width="63" height="10" sprite="menu_empty2px" color="{durabilitycolor}" fill="{durabilityfill}" type="filled" pos="1, -55" foregroundlayer="true" visible="{hasdurability}" />
+				<label depth="7" name="stackValue" pos="-2,-45" width="70" height="28" text="{itemcount}" font_size="26" effect="outline" justify="{#hasdurability ? 'Center' : 'Right'}" visible="{hasdurability}" />
+
+				<sprite depth="5" name="disabledOverlay" width="64" height="64" color="[darkGrey_half_alpha]" pos="1,-1" type="sliced" visible="false"/>
+
+				<label depth="7" name="timer" pos="35,-33" width="62" height="24" font_size="24" justify="center" pivot="center" effect="outline" color="[beige]"/>
+				<sprite depth="9" name="cancel" sprite="ui_game_symbol_x" width="62" height="62" color="255,0,0,255" type="sliced" visible="false" foregroundlayer="true"/>
+				<sprite depth="13" name="assembleIcon" size="35,35" sprite="{stacklockicon}" color="{stacklockcolor}" visible="{isassemblelocked}" pos="14,-14" foregroundlayer="true" />
+			</rect>
+		</lootFilter_item_stack>
+
+		<drag_lootfilteritem_stack>
+			<rect controller="LootFilter.LootFilterContentItemStack, LootFilter" width="86" height="86" pos="-43,43">
+				<sprite depth="3" name="background" width="1" height="1" color="{selectionbordercolor}" type="sliced" globalopacity="true"/>
+				<sprite depth="6" name="itemIcon" width="86" height="86" atlas="ItemIconAtlas" sprite="{itemicon}" pos="0,10" pivot="topleft" foregroundlayer="true" color="{iconcolor}"/>
+				<sprite depth="3" name="durabilityBackground" height="10" color="[darkGrey]" type="sliced" pos="0, -76" foregroundlayer="true" visible="{hasdurability}" />
+				<filledsprite depth="4" name="durability" height="10" color="{durabilitycolor}" fill="{durabilityfill}" type="filled" pos="0, -76" foregroundlayer="true" visible="{hasdurability}" />
+				<label depth="7" name="stackValue" pos="6,-60" width="72" height="28" text="{itemcount}" font_size="26" effect="outline" justify="{#hasdurability ? 'Center' : 'Right'}" />
+			</rect>
+		</drag_lootfilteritem_stack>
+	</append>
+</configs>

@@ -1,0 +1,135 @@
+<configs>
+	<append xpath="/windows/window[@name='windowLooting']/panel[@name='header']/rect">
+		<rect pos="0, 0">
+			<button depth="3" name="btnMoveLootFilter" sprite="ui_game_symbol_loot_sack" tooltip_key="lblLootFilter" pos="154, -22" style="icon32px, press, hover" pivot="center" sound="[paging_click]"/>
+		</rect>
+	</append>
+	<append xpath="/windows">
+		<window name="windowLootFilterFilterList" width="397" height="688" controller ="LootFilter.LootFilterFilterList, LootFilter" panel="Left" cursor_area="true">
+			<panel name="header" height="43" depth="1" backgroundspritename="ui_game_panel_header">
+				<sprite pos="4,-5" depth="2" name="windowIcon" style="icon32px" sprite="Craft_Icon_Basics"/>
+				<label style="header.name" text="basics" text_key="xuiBasics" />
+
+				<!-- <label pos="387, -6" depth="2" name="unlockedCount" width="64" height="32" text="0/65" font_size="32" color="[lightGrey]" justify="right" pivot="topright"/> -->
+				<!-- <sprite pos="328, -5" depth="2" name="unlockedIcon" style="icon32px" sprite="ui_game_symbol_book" color="[lightGrey]" pivot="topright"/> -->
+			</panel>
+
+			<panel name="content" width="100%" height="650" depth="1" pos="0,-43" on_scroll="true" disableautobackground="false">
+				<rect depth="3" name="searchControls" width="390" height="44" pos="3,-52">
+					<sprite name="backgroundMain" sprite="menu_empty3px" pos="-3,3" width="396" height="49" color="[black]" type="sliced" fillcenter="false" />
+					<sprite color="[darkGrey]" type="sliced" />
+					<!--#$-IGS BEGIN: Increasing collider scale to improve snap responsiveness -$#-->
+					<button depth="5" name="btnAddLootFilter" style="icon30px, press" pos="18,-22" sprite="server_favorite" pivot="center" sound="[paging_click]" tooltip="Add" collider_scale="1.5" />
+					<button depth="4" name="favorites" style="icon30px, press" pos="18,-26" sprite="server_favorite" pivot="center" sound="[paging_click]" tooltip="Favorites" tooltip_key="lblFavorites" collider_scale="1.5" />
+
+					<!--*#$-IGS END.-$#-->
+
+					<!--#$-IGS BEGIN: Disabling an element for console builds. -$#-->
+					<panel pos="104,0" width="200" disableautobackground="true">
+						<!--*#$-IGS END.-$#-->
+						<sprite depth="4" name="searchIcon" style="icon30px" pos="0,-22" sprite="ui_game_symbol_search" pivot="center"/>
+						<textfield depth="5" name="searchInput" pos="22,-7" width="140" height="30" virtual_keyboard_prompt="vkPromptSearchTerm" search_field="true" close_group_on_tab="true" clear_button="true" />
+					</panel>
+
+					<panel pos="286,0" width="104" height="43" disableautobackground="true">
+						<pager name="pager" pos="4,-6" contents_parent="content"/>
+					</panel>
+				</rect>
+				<grid name="lootfilters" rows="12" cols="1" pos="3,-98" width="390" height="552" cell_width="390" cell_height="46" controller="LootFilter.LootFilterList, LootFilter" repeat_content="true" arrangement="vertical" clear_selection_on_open="false">
+					<lootFilterList_entry name="0"/>
+				</grid>
+			</panel>
+		</window>
+
+		<window name="windowLootFilterContent" width="606" height="349" controller ="LootFilter.LootFilterContent, LootFilter" panel="Center" cursor_area="true">
+			<panel name="header" height="43" depth="1" backgroundspritename="ui_game_panel_header">
+				<sprite depth="3" name="windowIcon" style="icon32px" pivot="center" pos="21,-21" sprite="ui_game_symbol_backpack" />
+				<label depth="3" name="windowName" pos="42,-6" width="180" height="32" text="LootFilter Content" text_key="{xuiLootFilterContent}" font_size="32" />			
+				
+			</panel>
+			
+			<panel name="content" pos="0,-46" width="100%" height="303">
+				<pager name="pager" pos="500,43" contents_parent="content"/>
+				<sprite depth="8" name="backgroundMain" sprite="menu_empty3px"  pos="0,0" width="606" height="336" color="[black]" type="sliced" fillcenter="false" on_press="true"  gamepad_selectable="false"/>
+				<grid depth="10" name="lootFilterContents" rows="5" cols="9" pos="3,-3" cell_width="67" cell_height="67" controller="LootFilter.LootFilterContentGrid, LootFilter" repeat_content="true" >
+					<lootFilter_item_stack name="0"/>
+				</grid>
+			</panel>
+		</window>
+
+		<window name="windowLootFilterContentInfo" width="647" height="730" panel="Right" controller="LootFilter.LootFilterContentInfoWindow, LootFilter" cursor_area="true" >
+		<panel name="header" height="43" depth="1" backgroundspritename="ui_game_panel_header">
+			<sprite pos="4,-5" depth="2" name="windowIcon" style="icon32px" sprite="ui_game_symbol_skills"/>
+			<label style="header.name" text="{groupname}" />
+			<label pos="635, -9" depth="2" width="300" height="28" text="{currentlevel} {skillLevel} / {maxSkillLevel}" font_size="26" color="[lightGrey]" justify="right" pivot="topright"/>
+		</panel>
+		<rect name="content" pos="0,-46" height="669" depth="1">
+
+			<sprite depth="6" name="backgroundMain" sprite="menu_empty3px" width="151" height="163" color="[black]" type="sliced" fillcenter="false" />
+			<sprite depth="1" pos="2,-2" name="preview" width="148" height="162" color="[darkGrey]" type="sliced" />
+			<sprite depth="3" pos="77,-77" width="100" height="100" sprite="{groupicon}" pivot="center" foregroundlayer="true"/>
+
+			<rect name="descriptionBox" depth="1" pos="148,0" width="498" height="162" >
+				<sprite depth="1" name="background" color="[mediumGrey]" type="sliced"/>
+				<sprite depth="6" name="backgroundMain" sprite="menu_empty3px" pos="0,0" width="499" height="163" color="[black]" type="sliced" fillcenter="false" />
+
+				<label depth="2" name="descriptionText" pos="6,-8" width="486" height="144" text="{groupdescription}"/>
+			</rect>
+
+			<rect name="currentProgressBox" depth="1" pos="0,-160" height="44">
+				<sprite depth="1" name="background" color="[mediumGrey]" type="sliced"/>
+				<sprite depth="6" name="backgroundMain" sprite="menu_empty3px" pos="0,0" height="46" color="[black]" type="sliced" fillcenter="false" />
+
+				<label depth="2" pos="10,-22" width="80" height="32" text="{currentlevel} {skillLevel}" justify="right" pivot="left" />
+				<sprite depth="2" pos="99,-22" height="18" width="452" color="[black]" type="sliced" pivot="left" />
+				<sprite depth="3" pos="100,-22" height="16" width="450" color="[darkGrey]" type="sliced" pivot="left" foregroundlayer="true" />
+				<sprite depth="3" pos="100,-22" height="16" width="450" color="[red]" type="filled" pivot="left" foregroundlayer="true" fill="{skillpercentthislevel}" />
+				<label depth="2" pos="640,-22" width="80" height="32" text="{currentlevel} {nextSkillLevel}" justify="left" pivot="right" visible="{notmaxlevel}" />
+
+				<rect pos="200,0" width="250" depth="4" name="locked" visible="{nextSkillLevelLocked}">
+					<sprite depth="5" pos="0,-22" style="icon30px" pivot="left" foregroundlayer="true" sprite="ui_game_symbol_lock" />
+					<label depth="4" pos="40,-22" width="210" height="32" text="{nextSkillLevelRequirement}" justify="left" pivot="left" />
+				</rect>
+			</rect>
+
+			<rect name="effects" depth="1" pos="0,-203" width="647" height="135">
+				<sprite depth="1" name="background" color="[darkGrey]" type="sliced"/>
+				<sprite depth="3" name="backgroundMain" sprite="menu_empty3px" color="[black]" type="sliced" fillcenter="false" />
+
+				<rect name="header" height="43">
+					<sprite depth="1" name="background" color="[lightGrey]" type="sliced"/>
+					<sprite depth="3" pos="0,1" width="647" height="46" name="backgroundMain" sprite="menu_empty3px" color="[black]" type="sliced" fillcenter="false" />
+					<label depth="2" pos="14,-10" text_key="xuiSkillEffects"  height="34" />
+				</rect>
+
+				<label depth="2" pos="8,-47" width="310" height="84" text="{effectsCol1}" />
+				<label depth="2" pos="331,-47" width="310" height="84" text="{effectsCol2}" />
+			</rect>
+
+			<rect name="milestones" depth="1" pos="0,-336" width="647" height="348">
+				<sprite depth="1" name="background" color="[darkGrey]" type="sliced"/>
+				<sprite depth="4" name="backgroundMain" sprite="menu_empty3px" color="[black]" type="sliced" fillcenter="false" />
+
+				<rect name="header" height="43">
+					<sprite depth="1" name="background" color="[lightGrey]" type="sliced"/>
+					<sprite depth="3" pos="0,1" width="647" height="46" name="backgroundMain" sprite="menu_empty3px" color="[black]" type="sliced" fillcenter="false" />
+					<label depth="2" pos="14,-10" text_key="xuiSkillMilestones"  height="34" />
+				</rect>
+
+				<grid depth="2" rows="5" cols="1" pos="0,-45" width="647" cell_width="647" cell_height="60" repeat_content="true">
+					<skill_skill_milestone depth="2" width="647" height="60" />
+				</grid>
+			</rect>
+		</rect>
+	</window>
+
+	
+	<window name="dragAndDropLootFilterItemStack" width="86" height="86" depth="300" controller="LootFilter.LootFilterDragAndDropWindow, LootFilter"  gamepad_selectable="false">
+		<grid>
+			<rect>
+				<drag_lootfilteritem_stack />
+			</rect>
+		</grid>
+	</window>
+	</append>
+</configs>
