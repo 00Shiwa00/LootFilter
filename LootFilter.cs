@@ -1,10 +1,13 @@
 ﻿using JetBrains.Annotations;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using UnityEngine;
 
 namespace LootFilter
 {
@@ -228,6 +231,21 @@ namespace LootFilter
 			scrapItemStacks.Remove(toRemove);
 			LootFilterManager.updateLootFilter(this);
 		}
+		public void updateIndexOfItem(LootFilterItemStack itemstack)
+		{
+			LootFilterItemStack toUpdate = null;
+			if(itemstack.isDropItem)
+			{
+				toUpdate = this.dropItemStacks.Where(x => x.itemValue.ItemClass.Name == itemstack.itemValue.ItemClass.Name).First();				
+			}
+			else
+			{
+				toUpdate = this.scrapItemStacks.Where(x => x.itemValue.ItemClass.Name == itemstack.itemValue.ItemClass.Name).First();
+			}
+
+			toUpdate.Index = itemstack.Index;
+			LootFilterManager.updateLootFilterNoUI(this);
+		}
 		public bool itemIndexExists(int index)
 		{
 			/*bool b = this.dropItemStacks.Where(x => x.Index == index).Any();
@@ -246,18 +264,43 @@ namespace LootFilter
 			foreach(var item in this.dropItemStacks)
 				if(item.Index > i)
 					i = item.Index;
+			
 			return i;
 		}
 		public LootFilterItemStack[] getFilteredItems()
 		{
 			if(this.getMaxItemIndex() == -1)
-				return LootFilterItemStack.CreateArray(1);
-			LootFilterItemStack[] stack =  LootFilterItemStack.CreateArray(this.getMaxItemIndex()+1);
+				return LootFilterItemStack.CreateArray(XUiC_LootFilterContentGrid.PageLength*2);
+
+			int length = Math.Max(XUiC_LootFilterContentGrid.PageLength, (Mathf.CeilToInt((float)this.getMaxItemIndex()/ ((float)XUiC_LootFilterContentGrid.PageLength-1))+1) * XUiC_LootFilterContentGrid.PageLength);
+			LootFilterItemStack[] stack =  LootFilterItemStack.CreateArray(length);
+
+			//exclude negative Indices ==> used for DragAndDrop Item
 			foreach(var item in this.dropItemStacks)
-				stack[item.Index] = item;
+			{
+				if(item.Index > -1)
+					stack[item.Index] = item;
+			}
 			foreach(var item in this.scrapItemStacks)
-				stack[item.Index] = item;
+			{
+				if(item.Index > -1)
+					stack[item.Index] = item;
+			}				
 			return stack;
+		}
+		public LootFilterItemStack getDragAndDropItem()
+		{
+			foreach(var item in this.dropItemStacks)
+			{
+				if(item.Index == -1)
+					return item;
+			}
+			foreach(var item in this.scrapItemStacks)
+			{
+				if(item.Index == -1)
+					return item;
+			}
+			return null;
 		}
 	}
 }

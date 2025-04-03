@@ -68,6 +68,9 @@ namespace LootFilter
 
 				Log.Out(entryData.getName() + "  is active "+entryData.isActive.ToString());
 				base.windowGroup.Controller.GetChildByType<XUiC_LootFilterContentGrid>().SetStacks(entryData.getFilteredItems());
+				LootFilterItemStack DragAndDropItem = entryData.getDragAndDropItem();
+				if(DragAndDropItem != null) 
+					base.windowGroup.Controller.GetChildByType<XUiC_LootFilterContentGrid>().SetDragAndDropItem(DragAndDropItem);
 				base.windowGroup.Controller.GetChildByType<XUiC_LootFilterContentGrid>().currentLootFilter = entryData;
 			}
 		}

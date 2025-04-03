@@ -15,16 +15,16 @@ namespace LootFilter
 	{
 		public bool wasHoldingItem;
 		public XUiC_LootFilterContentItemStack[] itemControllers;
-		public LootFilterItemStack[] itemStacks = LootFilterItemStack.CreateArray(1);
+		
 		public LootFilter currentLootFilter = null;
 		public XUiC_Paging pager = null;
 		public int page;
-		public int PageLength = 45;
-		
+		public static int PageLength = 45;
+		public LootFilterItemStack[] itemStacks = LootFilterItemStack.CreateArray(PageLength);
 		public delegate void PageNumberChangedHandler();
 		public event PageNumberChangedHandler PageNumberChanged;
 
-		public delegate void XUiEvent_LootFilterContentSlotChangedEventHandler(int slotNumber);
+		public delegate void XUiEvent_LootFilterContentSlotChangedEventHandler(int slotNumber, LootFilterItemStack newLootFilterItemStack);
 		public event XUiEvent_LootFilterContentSlotChangedEventHandler LootFilterUIContentChanged;
 		public bool bAwakeCalled;
 
@@ -56,7 +56,7 @@ namespace LootFilter
 				pager.LastPageNumber = LastPage;
 			}
 		}
-		public int LastPage => Math.Max(0, Mathf.CeilToInt((float)itemStacks.Last().Index / (float)PageLength) - 1);
+		public int LastPage => Math.Max(0, Mathf.CeilToInt((float)itemStacks.Length / (float)(PageLength))-1);
 		XUiC_LootFilterDragAndDropWindow dragAndDrop;
 		public override void Init()
 		{
@@ -87,6 +87,7 @@ namespace LootFilter
 			foreach(XUiC_LootFilterContentItemStack c in itemControllers)
 			{
 				c.OnScroll += HandleOnScroll;
+				c.LootFilterContentSlotChangedEvent += HandleSlotChangedEvent;
 				c.LFGrid = this;
 			}
 			base.OnScroll += HandleOnScroll;
@@ -104,8 +105,12 @@ namespace LootFilter
 			}
 
 		}
-		public virtual void HandleSlotChangedEvent(int slotNumber)
+		public virtual void HandleSlotChangedEvent(int slotNumber, LootFilterItemStack newLootFilterItemStack)
 		{
+			Log.Warning("HandleSlotChangedEvent");
+			if(slotNumber > -1)
+				this.itemStacks[slotNumber] = newLootFilterItemStack;
+
 			//iterate through all UI Content on current Page
 			/*int num = PageLength * Page;
 			for(int i = 0; i < num; i++)
@@ -272,6 +277,11 @@ namespace LootFilter
 			}
 			IsDirty = true;
 			updatePageLabel();
+		}
+		internal void SetDragAndDropItem(LootFilterItemStack dragAndDropItem)
+		{
+			base.xui.currentPopupMenu.ClearItems();
+			this.dragAndDrop.CurrentStack = dragAndDropItem;
 		}
 		public void HandleOnScroll(XUiController _sender, float _delta)
 		{

@@ -8,6 +8,7 @@ using InControl;
 using Platform;
 using static XUiC_ItemStack;
 using static LootFilter.XUiC_LootFilterContentGrid;
+using System.Collections;
 
 namespace LootFilter
 {
@@ -607,10 +608,6 @@ namespace LootFilter
 
 					HandleSlotChangeEvent();
 					ItemClass itemClass = lfItemStack.itemValue.ItemClass;
-					/*if(itemClass != null && (StackLocation == StackLocationTypes.Backpack || StackLocation == StackLocationTypes.ToolBelt))
-					{
-						QuestLock = itemClass.IsQuestItem;
-					}*/
 
 					if(value.IsEmpty())
 					{
@@ -785,43 +782,65 @@ namespace LootFilter
 		public virtual void SwapItem()
 		{
 			Log.Out("called SwapItem");
-			base.xui.currentPopupMenu.ClearItems();
-			LootFilterItemStack currentStack = dragAndDrop.CurrentStack;
-			
-			if(lfItemStack.IsEmpty())
+			base.xui.currentPopupMenu.ClearItems();			
+			// CASE: PLACE
+			if(lfItemStack.IsEmpty() && !dragAndDrop.CurrentStack.IsEmpty())
 			{
 				//just set the currentStack to the slot
 				//PlayPlaceSound(currentStack);
-
-
-
+				bool flag = base.Selected;
+				LFItemStack = dragAndDrop.CurrentStack.Clone();
+				if(!LFItemStack.IsEmpty())
+				{
+					base.Selected = flag;
+				}				
+				dragAndDrop.CurrentStack = LootFilterItemStack.Empty.Clone();
+				LFItemStack.Index = this.LFGrid.Page * XUiC_LootFilterContentGrid.PageLength + SlotNumber;
+				LFGrid.currentLootFilter.updateIndexOfItem(LFItemStack);
+				LootFilterContentSlotChangedEvent.Invoke(LFItemStack.Index,LFItemStack);
 			}
 			else
-			{	
-				//set the currentStack here and load there previous ItemStack to DragAndDrop Slot
+			// CASE: PickUP
+				if(!LFItemStack.IsEmpty() && dragAndDrop.CurrentStack.IsEmpty())
+				{
+					//PlayPickupSound();
+					dragAndDrop.CurrentStack = lfItemStack.Clone();
+					if(!dragAndDrop.CurrentStack.IsEmpty())
+					{
+						dragAndDrop.CurrentStack.Index = -1;
+						LFGrid.currentLootFilter.updateIndexOfItem(dragAndDrop.CurrentStack);
+						
+					}
+					bool flag = base.Selected;
+					LFItemStack = LootFilterItemStack.Empty.Clone();
+					base.Selected = flag;
+					LFItemStack.Index = this.LFGrid.Page * XUiC_LootFilterContentGrid.PageLength + SlotNumber;
+					LootFilterContentSlotChangedEvent.Invoke(LFItemStack.Index, LFItemStack);
+				}
+			else
+			// CASE: SWAP
+				if(!LFItemStack.IsEmpty() && !dragAndDrop.CurrentStack.IsEmpty())
+				{
 				//PlayPickupSound();
-
-
-
-
+				LootFilterItemStack pickedUpItemStack = dragAndDrop.CurrentStack.Clone();
+				dragAndDrop.CurrentStack = lfItemStack.Clone();
+				if(!dragAndDrop.CurrentStack.IsEmpty())
+				{
+					dragAndDrop.CurrentStack.Index = -1;
+					LFGrid.currentLootFilter.updateIndexOfItem(dragAndDrop.CurrentStack);
+					//set the slot empty in the current loaded FilterContentList used by UI
+					LootFilterContentSlotChangedEvent.Invoke(this.LFGrid.Page * XUiC_LootFilterContentGrid.PageLength + SlotNumber, LootFilterItemStack.Empty.Clone());
+				}
+				bool flag = base.Selected;
+				LFItemStack = pickedUpItemStack.Clone();
+				if(!pickedUpItemStack.IsEmpty())
+				{
+					base.Selected = flag;
+					LFItemStack.Index = this.LFGrid.Page * XUiC_LootFilterContentGrid.PageLength + SlotNumber;
+					LFGrid.currentLootFilter.updateIndexOfItem(LFItemStack);
+					LootFilterContentSlotChangedEvent.Invoke(LFItemStack.Index, LFItemStack);
+				}
 			}
-			LootFilterItemStack its = lfItemStack.Clone();
-			dragAndDrop.CurrentStack = its;
-			ForceSetItemStack(currentStack.Clone());
-		//	base.xui.calloutWindow.UpdateCalloutsForItemStack(base.ViewComponent.UiTransform.gameObject, LFItemStack, isOver);
-		}
-
-		public void ForceSetItemStack(LootFilterItemStack _stack)
-		{
-			bool flag = base.Selected;
-			LFItemStack = LootFilterItemStack.Empty.Clone();
-			this.LFItemStack = _stack;
-			this.LootFilterContentSlotChangedEvent?.Invoke(SlotNumber);
-			if(!_stack.IsEmpty())
-			{
-				base.Selected = flag;
-			}
-			//this.LootFilterContentSlotChangedEvent?.Invoke(SlotNumber);
 		}
 		public void HandleSlotChangeEvent()
 		{
@@ -889,9 +908,13 @@ namespace LootFilter
 			}
 			else if(currentStack.itemValue.type == this.LFItemStack.itemValue.type && !currentStack.itemValue.HasQuality && !this.LFItemStack.itemValue.HasQuality)
 			{
+				SwapItem();
+				base.Selected = false;
+					return;
 				if(currentStack.count + this.LFItemStack.count > num)
 				{
-					int count = currentStack.count + this.LFItemStack.count - num;
+					
+						int count = currentStack.count + this.LFItemStack.count - num;
 					LootFilterItemStack itemStack = this.LFItemStack.Clone();
 					itemStack.count = num;
 					currentStack.count = count;
