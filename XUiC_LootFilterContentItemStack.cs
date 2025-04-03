@@ -8,6 +8,7 @@ using InControl;
 using Platform;
 using static XUiC_ItemStack;
 using static LootFilter.XUiC_LootFilterContentGrid;
+using System.Collections;
 
 namespace LootFilter
 {
@@ -792,36 +793,27 @@ namespace LootFilter
 			{
 				//just set the currentStack to the slot
 				//PlayPlaceSound(currentStack);
-
-
-
+				bool flag = base.Selected;
+				LFItemStack = currentStack.Clone();
+				if(!LFItemStack.IsEmpty())
+				{
+					base.Selected = flag;
+				}
+				dragAndDrop.CurrentStack = LootFilterItemStack.Empty.Clone();
 			}
 			else
 			{	
 				//set the currentStack here and load there previous ItemStack to DragAndDrop Slot
 				//PlayPickupSound();
+				dragAndDrop.CurrentStack = lfItemStack.Clone();
 
-
-
-
+				bool flag = base.Selected;
+				LFItemStack = currentStack.Clone();
+				if(!currentStack.IsEmpty())
+				{
+					base.Selected = flag;
+				}
 			}
-			LootFilterItemStack its = lfItemStack.Clone();
-			dragAndDrop.CurrentStack = its;
-			ForceSetItemStack(currentStack.Clone());
-		//	base.xui.calloutWindow.UpdateCalloutsForItemStack(base.ViewComponent.UiTransform.gameObject, LFItemStack, isOver);
-		}
-
-		public void ForceSetItemStack(LootFilterItemStack _stack)
-		{
-			bool flag = base.Selected;
-			LFItemStack = LootFilterItemStack.Empty.Clone();
-			this.LFItemStack = _stack;
-			this.LootFilterContentSlotChangedEvent?.Invoke(SlotNumber);
-			if(!_stack.IsEmpty())
-			{
-				base.Selected = flag;
-			}
-			//this.LootFilterContentSlotChangedEvent?.Invoke(SlotNumber);
 		}
 		public void HandleSlotChangeEvent()
 		{
