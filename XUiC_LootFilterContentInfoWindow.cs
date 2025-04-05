@@ -15,11 +15,7 @@ namespace LootFilter
 
 		//the new type of Stack (a square in the LootFilterContentGrid)
 		public XUiC_LootFilterContentItemStack selectedLootFilterItemStack;
-		public XUiC_ItemStack selectedItemStack;		
-		public XUiC_EquipmentStack selectedEquipmentStack;		
-		public XUiC_BasePartStack selectedPartStack;				
-		public XUiC_QuestTurnInEntry selectedTurnInItemStack;
-		
+
 		public XUiController itemPreview;
 
 		
@@ -455,70 +451,6 @@ namespace LootFilter
 				((XUiV_Window)viewComponent).ForceVisible(1f);
 			}
 		}
-
-		public void SetItemStack(XUiC_ItemStack stack, bool _makeVisible = false)
-		{
-			if(stack == null || stack.ItemStack.IsEmpty())
-			{
-				ShowEmptyInfo();
-				return;
-			}
-
-			makeVisible(_makeVisible);
-			selectedEquipmentStack = null;
-			selectedItemStack = stack;
-			selectedPartStack = null;
-			selectedTurnInItemStack = null;
-			SetInfo(stack.ItemStack, stack, XUiC_ItemActionList.ItemActionListTypes.Item);
-		}
-
-		public void SetItemStack(XUiC_EquipmentStack stack, bool _makeVisible = false)
-		{
-			if(stack == null || stack.ItemStack.IsEmpty())
-			{
-				ShowEmptyInfo();
-				return;
-			}
-
-			makeVisible(_makeVisible);
-			selectedItemStack = null;
-			selectedEquipmentStack = stack;
-			selectedPartStack = null;
-			selectedTurnInItemStack = null;
-			SetInfo(stack.ItemStack, stack, XUiC_ItemActionList.ItemActionListTypes.Equipment);
-		}
-
-		public void SetItemStack(XUiC_BasePartStack stack, bool _makeVisible = false)
-		{
-			if(stack == null || stack.ItemStack.IsEmpty())
-			{
-				ShowEmptyInfo();
-				return;
-			}
-
-			makeVisible(_makeVisible);
-			selectedItemStack = null;
-			selectedEquipmentStack = null;
-			selectedPartStack = stack;
-			selectedTurnInItemStack = null;
-			SetInfo(stack.ItemStack, stack, XUiC_ItemActionList.ItemActionListTypes.Part);
-		}		
-		public void SetItemStack(XUiC_QuestTurnInEntry stack, bool _makeVisible = false)
-		{
-			if(stack == null || stack.Item == null || stack.Item.IsEmpty())
-			{
-				ShowEmptyInfo();
-				return;
-			}
-
-			makeVisible(_makeVisible);
-			selectedItemStack = null;
-			selectedEquipmentStack = null;
-			selectedPartStack = null;
-			selectedTurnInItemStack = stack;
-			SetInfo(stack.Item, stack, XUiC_ItemActionList.ItemActionListTypes.QuestReward);
-		}
-		
 		public void SetInfo(ItemStack stack, XUiController controller, XUiC_ItemActionList.ItemActionListTypes actionListType)
 		{
 			bool flag = stack.itemValue.type == itemStack.itemValue.type && stack.count == itemStack.count;
@@ -637,22 +569,6 @@ namespace LootFilter
 				{
 					SetItemStack(selectedLootFilterItemStack);
 				}
-				else if(selectedItemStack != null)
-				{
-					SetItemStack(selectedItemStack);
-				}
-				else if(selectedEquipmentStack != null)
-				{
-					SetItemStack(selectedEquipmentStack);
-				}
-				else if(selectedPartStack != null)
-				{
-					SetItemStack(selectedPartStack);
-				}
-				else if(selectedTurnInItemStack != null)
-				{
-					SetItemStack(selectedTurnInItemStack);
-				}
 
 				IsDirty = false;
 			}
@@ -666,10 +582,6 @@ namespace LootFilter
 			}
 
 			makeVisible(_makeVisible);
-			selectedItemStack = null;
-			selectedEquipmentStack = null;
-			selectedPartStack = null;
-			selectedTurnInItemStack = null;
 			selectedLootFilterItemStack = stack;
 			SetInfo(stack.LFItemStack, stack, XUiC_ItemActionList.ItemActionListTypes.None);
 		}
@@ -678,22 +590,6 @@ namespace LootFilter
 			if(hoverEntry is XUiC_LootFilterContentItemStack xUiC_LootFilterItemStack)
 			{
 				return xUiC_LootFilterItemStack.LFItemStack;
-			}
-			if(hoverEntry is XUiC_ItemStack xUiC_ItemStack)
-			{
-				return xUiC_ItemStack.ItemStack;
-			}
-			if(hoverEntry is XUiC_EquipmentStack xUiC_EquipmentStack)
-			{
-				return xUiC_EquipmentStack.ItemStack;
-			}
-			if(hoverEntry is XUiC_BasePartStack xUiC_BasePartStack)
-			{
-				return xUiC_BasePartStack.ItemStack;
-			}
-			if(hoverEntry is XUiC_QuestTurnInEntry xUiC_QuestTurnInEntry)
-			{
-				return xUiC_QuestTurnInEntry.Item;
 			}
 
 			return null;
