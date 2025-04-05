@@ -72,6 +72,7 @@ namespace LootFilter
 				if(DragAndDropItem != null) 
 					base.windowGroup.Controller.GetChildByType<XUiC_LootFilterContentGrid>().SetDragAndDropItem(DragAndDropItem);
 				base.windowGroup.Controller.GetChildByType<XUiC_LootFilterContentGrid>().currentLootFilter = entryData;
+				base.windowGroup.Controller.GetChildByType<XUiC_LootFilterContentInfoWindow>().SetLootFilter(this);
 			}
 		}
 	}

@@ -42,5 +42,17 @@
 				<label depth="7" name="stackValue" pos="6,-60" width="72" height="28" text="{itemcount}" font_size="26" effect="outline" justify="{#hasdurability ? 'Center' : 'Right'}" />
 			</rect>
 		</drag_lootfilteritem_stack>
+
+		<lootfilteritem_action_entry>
+			<rect height="43" controller="LootFilter.LootFilterItemActionEntry, LootFilter" disabled_font_color="[disabledLabelColor]" default_font_color="[labelColor]" default_background_color="[mediumGrey]">
+				<sprite depth="3" name="background" color="[mediumGrey]" type="sliced" on_press="true" on_hover="true" width="147" sound_play_on_hover="[default_hover]" gamepad_selectable="false"/>
+				<sprite depth="4" name="Icon" sprite="{actionicon}" size="24,24" color="{statuscolor}" pos="2,-10" foregroundlayer="true"/>
+				<!--#$-IGS BEGIN: Adding gamepad callout. -$#-->
+				<label depth="4" name="Name" pos="32,-22" width="78" height="26" text="{actionname}" font_size="26" color="{statuscolor}" effect="shadow" pivot="left" />
+				<gamepad_icon depth="4" name="gamepadIcon" size="44,44" pos="146,-22" pivot="Right" visible="{inspectheld}" />
+				<label depth="4" name="keyboardButton" pos="145,-22" width="36" height="26" text="&lt;W&gt;" font_size="26" color="{statuscolor}" effect="shadow" pivot="right" justify="center" />
+				<!--*#$-IGS END.-$#-->
+			</rect>
+		</lootfilteritem_action_entry>
 	</append>
 </configs>

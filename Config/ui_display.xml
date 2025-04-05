@@ -1,0 +1,8 @@
+<configs>
+	<append xpath="/ui_display_info/item_display">
+		<item_display_info display_type="lootFilter" display_group="groupLootFilter">
+			<display_entry name="DropItemCount" title_key="statDropItemCount" tags="perkGunslinger,revolver,perkBoomstick,perkDeadEye,perkMachineGunner,perkBookAutoWeapons,perkTurrets,perkArchery,admin"/>
+		</item_display_info>
+	</append>
+</configs>
+

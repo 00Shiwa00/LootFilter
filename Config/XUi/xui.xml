@@ -2,10 +2,11 @@
 	<append xpath="/xui/ruleset">
 		<window_group name="lootfilter" controller="LootFilter.LootFilterWindowGroup, LootFilter" open_backpack_on_open="false" close_compass_on_open="true" >
 			<window name="windowLootFilterFilterList"/>
-			<window name="itemInfoPanel"/>
-			<window name="windowLootFilterContent"/>			
+			<window name="windowLootFilterItemInfo"/>
+			<window name="emptyInfoPanel" />
+			<window name="windowLootFilterContent"/>	
+					
 		</window_group>
-
 
 		<window_group name="lootfilterdraganddrop" actionSet="false">
 			<window name="dragAndDropLootFilterItemStack"/>

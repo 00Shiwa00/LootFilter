@@ -13,6 +13,7 @@ using WorldGenerationEngineFinal;
 using System.Xml.Schema;
 using System.Xml.Linq;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
+using Audio;
 
 namespace LootFilter
 {
@@ -96,9 +97,18 @@ namespace LootFilter
 			}
 			if(i == 0)
 				playerUI.windowManager.CloseAllOpenWindows();
+			else
+				WarnQueueFull();
+			//TODO: OR inventory full!
 
 		}
-
+		public static void WarnQueueFull()
+		{
+			EntityPlayerLocal localPlayer = getLocalPlayer();
+			LocalPlayerUI playerUI = LocalPlayerUI.GetUIForPlayer(localPlayer);
+			GameManager.ShowTooltip(playerUI.entityPlayer, Localization.Get("xuiCraftQueueFull"));
+			Manager.PlayInsidePlayerHead("ui_denied");
+		}
 		public static void changeDropItem()
 		{
 			var alf = getActiveLootFilter();

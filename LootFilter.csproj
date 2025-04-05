@@ -74,6 +74,7 @@
   <ItemGroup>
     <Compile Include="API.cs" />
     <Compile Include="LootFilter.cs" />
+    <Compile Include="LootFilterItemActionChangeFilterType.cs" />
     <Compile Include="XUiC_LootFilterContentInfoWindow.cs" />
     <Compile Include="LootFilterItemStack.cs" />
     <Compile Include="XUiC_LootFilterContent.cs" />
@@ -81,6 +82,7 @@
     <Compile Include="LootFilterLoader.cs" />
     <Compile Include="XUiC_LootFilterContentItemStack.cs" />
     <Compile Include="XUiC_LootFilterDragAndDropWindow.cs" />
+    <Compile Include="XUiC_LootFilterItemActionEntry.cs" />
     <Compile Include="XUiC_LootFilterItemActionList.cs" />
     <Compile Include="XUiC_LootFilterList.cs" />
     <Compile Include="LootFilterManager.cs" />

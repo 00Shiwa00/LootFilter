@@ -13,13 +13,15 @@ namespace LootFilter
 		public ItemStack itemStack = ItemStack.Empty.Clone();		
 		public ItemClass itemClass;
 
+		public LootFilter lootFilter = null;
+
 		//the new type of Stack (a square in the LootFilterContentGrid)
 		public XUiC_LootFilterContentItemStack selectedLootFilterItemStack;
+		public XUiC_LootFilterEntry selectedLootFilterEntry;
 
 		public XUiController itemPreview;
 
-		
-		public XUiC_ItemActionList mainActionItemList;		
+		public XUiC_LootFilterItemActionList mainActionItemList;
 		public XUiC_PartList partList;
 		public XUiC_Counter BuySellCounter;		
 		public XUiController statButton;		
@@ -77,7 +79,7 @@ namespace LootFilter
 		{
 			base.Init();
 			itemPreview = GetChildById("itemPreview");
-			mainActionItemList = (XUiC_ItemActionList)GetChildById("itemActions");
+			mainActionItemList = (XUiC_LootFilterItemActionList)GetChildById("itemActions");
 			partList = (XUiC_PartList)GetChildById("parts");
 			BuySellCounter = GetChildByType<XUiC_Counter>();
 			if(BuySellCounter != null)
@@ -125,6 +127,11 @@ namespace LootFilter
 			switch(bindingName)
 			{
 				case "itemname":
+					if(selectedLootFilterEntry != null)
+					{
+						value = selectedLootFilterEntry.entryData.getName();
+						return true;
+					}
 					value = ((this.itemClass != null) ? this.itemClass.GetLocalizedItemName() : "");
 					return true;
 				case "itemammoname":
@@ -358,52 +365,61 @@ namespace LootFilter
 					value = "false";
 					return true;
 				case "showonlydescription":
-					value = (!XUiM_ItemStack.HasItemStats(itemStack)).ToString();
+					if(selectedLootFilterEntry != null)
+					{
+						value = false.ToString();
+					}
+					else
+						value = (!XUiM_ItemStack.HasItemStats(itemStack)).ToString();
 					return true;
 				case "showstatanddescription":
+					if(selectedLootFilterEntry != null)
+					{
+						value = true.ToString();
+					} else
 					value = XUiM_ItemStack.HasItemStats(itemStack).ToString();
 					return true;
 				case "itemstattitle1":
-					value = ((this.itemClass != null) ? GetStatTitle(0) : "");
+					value = ((this.itemClass != null || this.selectedLootFilterEntry != null) ? GetStatTitle(0) : "");
 					return true;
 				case "itemstat1":
-					value = ((this.itemClass != null) ? GetStatValue(0) : "");
+					value = ((this.itemClass != null || this.selectedLootFilterEntry != null) ? GetStatValue(0) : "");
 					return true;
 				case "itemstattitle2":
-					value = ((this.itemClass != null) ? GetStatTitle(1) : "");
+					value = ((this.itemClass != null || this.selectedLootFilterEntry != null) ? GetStatTitle(1) : "");
 					return true;
 				case "itemstat2":
-					value = ((this.itemClass != null) ? GetStatValue(1) : "");
+					value = ((this.itemClass != null || this.selectedLootFilterEntry != null) ? GetStatValue(1) : "");
 					return true;
 				case "itemstattitle3":
-					value = ((this.itemClass != null) ? GetStatTitle(2) : "");
+					value = ((this.itemClass != null || this.selectedLootFilterEntry != null) ? GetStatTitle(2) : "");
 					return true;
 				case "itemstat3":
-					value = ((this.itemClass != null) ? GetStatValue(2) : "");
+					value = ((this.itemClass != null || this.selectedLootFilterEntry != null) ? GetStatValue(2) : "");
 					return true;
 				case "itemstattitle4":
-					value = ((this.itemClass != null) ? GetStatTitle(3) : "");
+					value = ((this.itemClass != null || this.selectedLootFilterEntry != null) ? GetStatTitle(3) : "");
 					return true;
 				case "itemstat4":
-					value = ((this.itemClass != null) ? GetStatValue(3) : "");
+					value = ((this.itemClass != null || this.selectedLootFilterEntry != null) ? GetStatValue(3) : "");
 					return true;
 				case "itemstattitle5":
-					value = ((this.itemClass != null) ? GetStatTitle(4) : "");
+					value = ((this.itemClass != null || this.selectedLootFilterEntry != null) ? GetStatTitle(4) : "");
 					return true;
 				case "itemstat5":
-					value = ((this.itemClass != null) ? GetStatValue(4) : "");
+					value = ((this.itemClass != null || this.selectedLootFilterEntry != null) ? GetStatValue(4) : "");
 					return true;
 				case "itemstattitle6":
-					value = ((this.itemClass != null) ? GetStatTitle(5) : "");
+					value = ((this.itemClass != null || this.selectedLootFilterEntry != null) ? GetStatTitle(5) : "");
 					return true;
 				case "itemstat6":
-					value = ((this.itemClass != null) ? GetStatValue(5) : "");
+					value = ((this.itemClass != null || this.selectedLootFilterEntry != null) ? GetStatValue(5) : "");
 					return true;
 				case "itemstattitle7":
-					value = ((this.itemClass != null) ? GetStatTitle(6) : "");
+					value = ((this.itemClass != null || this.selectedLootFilterEntry != null) ? GetStatTitle(6) : "");
 					return true;
 				case "itemstat7":
-					value = ((this.itemClass != null) ? GetStatValue(6) : "");
+					value = ((this.itemClass != null || this.selectedLootFilterEntry != null) ? GetStatValue(6) : "");
 					return true;
 				default:
 					return false;
@@ -413,6 +429,18 @@ namespace LootFilter
 		
 		public string GetStatTitle(int index)
 		{
+			if(this.selectedLootFilterEntry != null)
+			{
+				switch(index)
+				{
+					case 0:
+						{
+							return "DropItemCount";
+						}
+					default:
+						return "something";
+				}
+			}
 			if(itemDisplayEntry == null || itemDisplayEntry.DisplayStats.Count <= index)
 			{
 				return "";
@@ -429,17 +457,44 @@ namespace LootFilter
 		
 		public string GetStatValue(int index)
 		{
-			if(itemDisplayEntry == null || itemDisplayEntry.DisplayStats.Count <= index)
+			if(this.selectedLootFilterItemStack != null)
 			{
-				return "";
-			}
+				if(itemDisplayEntry == null || itemDisplayEntry.DisplayStats.Count <= index)
+				{
+					return "";
+				}
 
-			DisplayInfoEntry infoEntry = itemDisplayEntry.DisplayStats[index];
-			if(!CompareStack.IsEmpty())
-			{
-				return XUiM_ItemStack.GetStatItemValueTextWithCompareInfo(itemStack, CompareStack, base.xui.playerUI.entityPlayer, infoEntry, flipCompare: false, useMods: false);
+				DisplayInfoEntry infoEntry = itemDisplayEntry.DisplayStats[index];
+				if(!CompareStack.IsEmpty())
+				{
+					return XUiM_ItemStack.GetStatItemValueTextWithCompareInfo(itemStack, CompareStack, base.xui.playerUI.entityPlayer, infoEntry, flipCompare: false, useMods: false);
+				}
+				return XUiM_ItemStack.GetStatItemValueTextWithCompareInfo(itemStack, CompareStack, base.xui.playerUI.entityPlayer, infoEntry);
 			}
-			return XUiM_ItemStack.GetStatItemValueTextWithCompareInfo(itemStack, CompareStack, base.xui.playerUI.entityPlayer, infoEntry);
+			else if(selectedLootFilterEntry != null)
+			{
+				/*if(itemDisplayEntry == null || itemDisplayEntry.DisplayStats.Count <= index)
+				{
+					return "";
+				}
+				DisplayInfoEntry infoEntry = itemDisplayEntry.DisplayStats[index];
+				switch(infoEntry.CustomName)
+				{
+					case "DropItemCount":
+					{
+						Log.Warning("DropItemCount");
+							return selectedLootFilterEntry.entryData.dropItemStacks.ToArray().Length.ToString();
+					}
+				}*/
+				switch(index)
+				{
+					case 0:
+					{
+						return selectedLootFilterEntry.entryData.dropItemStacks.ToArray().Length.ToString();
+					}
+				}
+			}
+			return "";
 		}
 
 		
@@ -451,7 +506,7 @@ namespace LootFilter
 				((XUiV_Window)viewComponent).ForceVisible(1f);
 			}
 		}
-		public void SetInfo(ItemStack stack, XUiController controller, XUiC_ItemActionList.ItemActionListTypes actionListType)
+		public void SetInfo(ItemStack stack, XUiController controller, XUiC_LootFilterItemActionList.LootFilterItemActionListTypes actionListType)
 		{
 			bool flag = stack.itemValue.type == itemStack.itemValue.type && stack.count == itemStack.count;
 			itemStack = stack.Clone();
@@ -512,8 +567,14 @@ namespace LootFilter
 
 			RefreshBindings();
 		}
-
-
+		public void SetInfo(LootFilter stack, XUiController controller, XUiC_LootFilterItemActionList.LootFilterItemActionListTypes actionListType)
+		{
+			itemDisplayEntry = UIDisplayInfoManager.Current.GetDisplayStatsForTag("lootFilter");
+			mainActionItemList.SetCraftingActionList(actionListType, controller);
+			partList.ViewComponent.IsVisible = false;
+			this.itemClass = null;
+			RefreshBindings();
+		}
 
 		public XUiC_SelectableEntry HoverEntry
 		{
@@ -569,6 +630,10 @@ namespace LootFilter
 				{
 					SetItemStack(selectedLootFilterItemStack);
 				}
+				if(selectedLootFilterEntry != null)
+				{
+					SetLootFilter(selectedLootFilterEntry);
+				}
 
 				IsDirty = false;
 			}
@@ -583,7 +648,8 @@ namespace LootFilter
 
 			makeVisible(_makeVisible);
 			selectedLootFilterItemStack = stack;
-			SetInfo(stack.LFItemStack, stack, XUiC_ItemActionList.ItemActionListTypes.None);
+			selectedLootFilterEntry = null;
+			SetInfo(stack.LFItemStack, stack, XUiC_LootFilterItemActionList.LootFilterItemActionListTypes.LootFilterItemStack);
 		}
 		public ItemStack GetHoverControllerItemStack()
 		{
@@ -593,6 +659,20 @@ namespace LootFilter
 			}
 
 			return null;
+		}
+
+		internal void SetLootFilter(XUiC_LootFilterEntry lootFilterEntry, bool _makeVisible = true)
+		{
+			if(lootFilterEntry == null || lootFilterEntry.entryData == null)
+			{
+				ShowEmptyInfo();
+				return;
+			}
+
+			makeVisible(_makeVisible);
+			selectedLootFilterItemStack = null;
+			selectedLootFilterEntry = lootFilterEntry;
+			SetInfo(lootFilterEntry.entryData, lootFilterEntry, XUiC_LootFilterItemActionList.LootFilterItemActionListTypes.LootFilter);
 		}
 	}
 }
