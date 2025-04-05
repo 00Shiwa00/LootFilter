@@ -81,6 +81,7 @@
     <Compile Include="LootFilterLoader.cs" />
     <Compile Include="XUiC_LootFilterContentItemStack.cs" />
     <Compile Include="XUiC_LootFilterDragAndDropWindow.cs" />
+    <Compile Include="XUiC_LootFilterItemActionList.cs" />
     <Compile Include="XUiC_LootFilterList.cs" />
     <Compile Include="LootFilterManager.cs" />
     <Compile Include="XUiC_LootFilterEntry.cs" />
