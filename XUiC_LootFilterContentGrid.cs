@@ -83,12 +83,16 @@ namespace LootFilter
 			this.PageNumberChanged += updateCurrentPageContents;
 			this.LootFilterUIContentChanged += HandleSlotChangedEvent;
 			//pager.OnPageChanged += updateCurrentPageContents;
+
+			var infoWindow = this.WindowGroup.Controller.GetChildByType<XUiC_LootFilterContentInfoWindow>();
+
 			itemControllers = GetChildrenByType<XUiC_LootFilterContentItemStack>();
 			foreach(XUiC_LootFilterContentItemStack c in itemControllers)
 			{
 				c.OnScroll += HandleOnScroll;
 				c.LootFilterContentSlotChangedEvent += HandleSlotChangedEvent;
 				c.LFGrid = this;
+				c.InfoWindow = infoWindow;
 			}
 			base.OnScroll += HandleOnScroll;
 			XUiController childById = GetChildById("lootFilterContents");
@@ -198,7 +202,7 @@ namespace LootFilter
 				//	xUiC_ItemStack.SlotChangedEvent -= handleSlotChangedDelegate;
 				//	xUiC_ItemStack.SlotChangedEvent += handleSlotChangedDelegate;
 					xUiC_ItemStack.SlotNumber = i;
-					xUiC_ItemStack.InfoWindow = childByType;
+					//xUiC_ItemStack.InfoWindow = childByType;
 					xUiC_ItemStack.LFItemStack = itemStacks[num].Clone();
 				}
 				else
@@ -207,7 +211,7 @@ namespace LootFilter
 					XUiC_LootFilterContentItemStack xUiC_ItemStack = itemControllers[i];
 					//xUiC_ItemStack.SlotChangedEvent -= handleSlotChangedDelegate;
 					xUiC_ItemStack.SlotNumber = i;
-					xUiC_ItemStack.InfoWindow = childByType;
+					//xUiC_ItemStack.InfoWindow = childByType;
 					xUiC_ItemStack.LFItemStack = LootFilterItemStack.Empty;
 					if(xUiC_ListEntry.Selected)
 					{

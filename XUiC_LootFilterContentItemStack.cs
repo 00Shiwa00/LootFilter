@@ -530,6 +530,7 @@ namespace LootFilter
 						{
 							if(dragAndDrop.CurrentStack.IsEmpty())
 							{
+								//this will trigger then item is clicked
 								Log.Out("HandleItemInspect4");
 								HandleItemInspect();
 							}
